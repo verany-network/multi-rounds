@@ -1,0 +1,4 @@
+rootProject.name = 'core-round-manager'
+include 'round-parent'
+include 'round-api'
+

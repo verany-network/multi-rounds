@@ -1,0 +1,12 @@
+net/verany/volcano/GameSetting.java
+ net.verany.volcano.GameSetting
+net/verany/volcano/event/VolcanoPlayerQuitEvent.java
+ net.verany.volcano.event.VolcanoPlayerQuitEvent
+net/verany/volcano/AbstractGameManager.java
+ net.verany.volcano.AbstractGameManager
+net/verany/volcano/event/VolcanoPlayerJoinEvent.java
+ net.verany.volcano.event.VolcanoPlayerJoinEvent
+net/verany/volcano/round/AbstractVolcanoRound.java
+ net.verany.volcano.round.AbstractVolcanoRound
+net/verany/volcano/player/IVolcanoPlayer.java
+ net.verany.volcano.player.IVolcanoPlayer
