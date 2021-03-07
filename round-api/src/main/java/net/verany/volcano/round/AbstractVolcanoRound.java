@@ -2,11 +2,11 @@ package net.verany.volcano.round;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.verany.api.Verany;
+import net.verany.api.AbstractVerany;
 import net.verany.api.gamemode.AbstractGameMode;
 import net.verany.api.module.VeranyProject;
 import net.verany.api.player.IPlayerInfo;
-import net.verany.api.player.IVeranyPlayer;
+import net.verany.api.settings.SettingLoader;
 import net.verany.volcano.AbstractGameManager;
 import net.verany.volcano.player.IVolcanoPlayer;
 import org.bukkit.Bukkit;
@@ -17,9 +17,9 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class AbstractVolcanoRound {
+public abstract class AbstractVolcanoRound extends SettingLoader {
 
-    private final String id = Verany.generate(10);
+    private final String id = AbstractVerany.generate(10);
     private final VeranyProject project;
     private final AbstractGameMode gameMode;
     private final List<IVolcanoPlayer> players = new ArrayList<>();
@@ -30,7 +30,7 @@ public abstract class AbstractVolcanoRound {
 
     public List<IVolcanoPlayer> getOtherPlayers() {
         List<IVolcanoPlayer> toReturn = new ArrayList<>();
-        for (IVolcanoPlayer player : Verany.getPlayers(IVolcanoPlayer.class))
+        for (IVolcanoPlayer player : AbstractVerany.getPlayers(IVolcanoPlayer.class))
             if (!players.contains(player))
                 toReturn.add(player);
         return toReturn;
@@ -39,7 +39,7 @@ public abstract class AbstractVolcanoRound {
     public List<IPlayerInfo> getVeranyPlayers() {
         List<IPlayerInfo> toReturn = new ArrayList<>();
         for (IVolcanoPlayer player : players)
-            toReturn.add(Verany.getPlayer(player.getUniqueId()));
+            toReturn.add(AbstractVerany.getPlayer(player.getUniqueId()));
         return toReturn;
     }
 
