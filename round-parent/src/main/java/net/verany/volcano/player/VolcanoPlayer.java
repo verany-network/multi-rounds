@@ -2,7 +2,8 @@ package net.verany.volcano.player;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.verany.api.Verany;
+import net.verany.api.AbstractVerany;
+import net.verany.api.module.VeranyProject;
 import net.verany.volcano.VeranyServer;
 import net.verany.volcano.event.VolcanoPlayerJoinEvent;
 import net.verany.volcano.event.VolcanoPlayerQuitEvent;
@@ -33,20 +34,27 @@ public class VolcanoPlayer implements IVolcanoPlayer {
     }
 
     @Override
-    public void joinRound(String id) {
+    public void joinRound(String id, VeranyProject project) {
         round = VeranyServer.ROUNDS.stream().filter(found -> found.getId().equals(id)).findFirst().orElse(null);
 
         assert round != null;
 
         round.getPlayers().add(this);
-        Verany.sync(round.getProject(), () -> Bukkit.getPluginManager().callEvent(new VolcanoPlayerJoinEvent(player, round)));
+
+        for (IVolcanoPlayer otherPlayer : round.getOtherPlayers()) {
+            Player otherBukkitPlayer = Bukkit.getPlayer(otherPlayer.getUniqueId());
+            otherBukkitPlayer.hidePlayer(project, player);
+            player.hidePlayer(project, otherBukkitPlayer);
+        }
+
+        AbstractVerany.sync(round.getProject(), () -> Bukkit.getPluginManager().callEvent(new VolcanoPlayerJoinEvent(player, round)));
     }
 
     @Override
     public void quitRound() {
         round.getPlayers().remove(this);
         System.out.println("ID:" + round.getId());
-        Verany.sync(round.getProject(), () -> {
+        AbstractVerany.sync(round.getProject(), () -> {
             Bukkit.getPluginManager().callEvent(new VolcanoPlayerQuitEvent(player, round));
             round = null;
         });
