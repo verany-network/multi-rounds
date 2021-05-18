@@ -12,6 +12,8 @@ public interface IVolcanoPlayer extends IDefault<UUID> {
 
     void joinRound(String id, VeranyProject project);
 
+    void connectToRound(String server, String id);
+
     void quitRound();
 
 }
