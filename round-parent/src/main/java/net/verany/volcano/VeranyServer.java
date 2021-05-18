@@ -1,9 +1,13 @@
 package net.verany.volcano;
 
+import de.dytanic.cloudnet.driver.CloudNetDriver;
+import de.dytanic.cloudnet.driver.service.*;
 import de.dytanic.cloudnet.wrapper.Wrapper;
 import net.verany.api.AbstractVerany;
 import net.verany.api.gamemode.AbstractGameMode;
+import net.verany.api.gamemode.GameState;
 import net.verany.api.module.VeranyProject;
+import net.verany.api.task.AbstractTask;
 import net.verany.volcano.round.AbstractVolcanoRound;
 import net.verany.volcano.round.ServerRoundData;
 import net.verany.volcano.round.VolcanoRound;
@@ -20,6 +24,37 @@ public class VeranyServer {
     public static void registerGameMode(VeranyProject project, AbstractGameMode gameMode) {
         for (int i = 0; i < project.getModule().maxRounds(); i++)
             ROUNDS.add(new VolcanoRound(project, gameMode));
+    }
+
+    public VeranyServer() {
+        AbstractVerany.addTask(new AbstractTask(1000) {
+            @Override
+            public void run() {
+                int lobbyRounds = 0;
+
+                for (AbstractVolcanoRound round : ROUNDS) {
+                    if (round.getSettingValue(GameSetting.GAME_STATE).equals(GameState.WAITING))
+                        lobbyRounds++;
+
+                    if(lobbyRounds < round.getProject().getModule().maxRounds()) {
+
+                    }
+
+                    double percentage = round.getSettingValue(GameSetting.START_WHEN_FULL);
+                    if (percentage == -1) continue;
+                    double online = round.getPlayers().size() * 100D / round.getSettingValue(GameSetting.MAX_PLAYERS);
+                    if (online >= percentage && !round.isNewStarted()) {
+                        round.setNewStarted(true);
+                        ServiceTask serviceTask = CloudNetDriver.getInstance().getServiceTaskProvider().getServiceTask("Bingo");
+                        ServiceInfoSnapshot serviceInfoSnapshot = CloudNetDriver.getInstance().getCloudServiceFactory().createCloudService(serviceTask);
+
+                        if (serviceInfoSnapshot != null) {
+                            serviceInfoSnapshot.provider().start();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public static void setGameManager(Consumer<List<AbstractVolcanoRound>> rounds) {
