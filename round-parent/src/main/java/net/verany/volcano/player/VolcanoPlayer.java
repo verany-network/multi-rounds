@@ -37,23 +37,21 @@ public class VolcanoPlayer implements IVolcanoPlayer {
     public void joinRound(String id, VeranyProject project) {
         round = VeranyServer.ROUNDS.stream().filter(found -> found.getId().equals(id)).findFirst().orElse(null);
 
-        assert round != null;
+        if (round == null) return;
 
         round.getPlayers().add(this);
-
-        for (IVolcanoPlayer otherPlayer : round.getOtherPlayers()) {
-            Player otherBukkitPlayer = Bukkit.getPlayer(otherPlayer.getUniqueId());
-            otherBukkitPlayer.hidePlayer(project, player);
-            player.hidePlayer(project, otherBukkitPlayer);
-        }
 
         AbstractVerany.sync(round.getProject(), () -> Bukkit.getPluginManager().callEvent(new VolcanoPlayerJoinEvent(player, round)));
     }
 
     @Override
+    public void connectToRound(String server, String id) {
+        AbstractVerany.getPlayer(player).sendOnServer(server);
+    }
+
+    @Override
     public void quitRound() {
         round.getPlayers().remove(this);
-        System.out.println("ID:" + round.getId());
         AbstractVerany.sync(round.getProject(), () -> {
             Bukkit.getPluginManager().callEvent(new VolcanoPlayerQuitEvent(player, round));
             round = null;
