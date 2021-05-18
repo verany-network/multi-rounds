@@ -13,6 +13,7 @@ public class GameSetting {
     public static final AbstractSetting<GameState> GAME_STATE = new SettingWrapper.TempSettingWrapper<>("gameState", GameState.class, GameState.WAITING);
     public static final AbstractSetting<Boolean> TAB_LIST = new SettingWrapper.TempSettingWrapper<>("tablist", Boolean.class, true);
     public static final AbstractSetting<Boolean> CHAT = new SettingWrapper.TempSettingWrapper<>("chat", Boolean.class, true);
+    public static final AbstractSetting<Double> START_WHEN_FULL = new SettingWrapper.TempSettingWrapper<>("start_when_full", Double.class, -1D);
     public static final AbstractSetting<Integer> MAX_PLAYERS = new SettingWrapper.TempSettingWrapper<>("max_players", Integer.class, 20);
 
 }
