@@ -2,8 +2,10 @@ package net.verany.volcano.round;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.verany.api.AbstractVerany;
 import net.verany.api.gamemode.AbstractGameMode;
+import net.verany.api.interfaces.IDefault;
 import net.verany.api.module.VeranyProject;
 import net.verany.api.player.IPlayerInfo;
 import net.verany.api.settings.SettingLoader;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @RequiredArgsConstructor
 public abstract class AbstractVolcanoRound extends SettingLoader {
 
@@ -23,6 +26,7 @@ public abstract class AbstractVolcanoRound extends SettingLoader {
     private final VeranyProject project;
     private final AbstractGameMode gameMode;
     private final List<IVolcanoPlayer> players = new ArrayList<>();
+    private boolean newStarted = false;
 
     public abstract <T extends AbstractGameManager> T getGameManager(Class<T> tClass);
 
@@ -47,6 +51,16 @@ public abstract class AbstractVolcanoRound extends SettingLoader {
         List<Player> toReturn = new ArrayList<>();
         for (IVolcanoPlayer player : players)
             toReturn.add(Bukkit.getPlayer(player.getUniqueId()));
+        return toReturn;
+    }
+
+    public <T extends IDefault<?>> List<T> getPlayers(Class<T> tClass) {
+        List<T> toReturn = new ArrayList<>();
+        for (IPlayerInfo veranyPlayer : getVeranyPlayers()) {
+            T player = veranyPlayer.getPlayer(tClass);
+            if (player != null)
+                toReturn.add(player);
+        }
         return toReturn;
     }
 
