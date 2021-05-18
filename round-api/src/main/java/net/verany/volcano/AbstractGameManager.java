@@ -7,6 +7,7 @@ import net.verany.api.gamemode.countdown.AbstractCountdown;
 import net.verany.volcano.round.AbstractVolcanoRound;
 
 import java.util.HashMap;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -14,6 +15,8 @@ import java.util.HashMap;
 public abstract class AbstractGameManager {
 
     private final AbstractVolcanoRound round;
+
+    public final Random random = new Random();
 
     public AbstractCountdown startLobby() {
         AbstractCountdown countdown = round.getSettingValue(GameSetting.LOBBY_TASK);
