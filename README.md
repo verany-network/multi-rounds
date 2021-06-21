@@ -1,7 +1,7 @@
 Verany Multi Rounds
 =============
 
-MultiRounds enables high-performance player distribution on Latest Minecraft servers. 
+Multi Rounds enables high-performance player distribution on Latest Minecraft servers. 
 
 Licencing
 ---------------------------
